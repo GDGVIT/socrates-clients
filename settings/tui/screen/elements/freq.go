@@ -36,3 +36,11 @@ func NewFreqBox() FreqBox {
 
 	return f
 }
+
+func (f FreqBox) HasFocus() bool {
+	return f.Field.HasFocus()
+}
+
+func (f FreqBox) GetFocus() *tview.InputField {
+	return f.Field
+}

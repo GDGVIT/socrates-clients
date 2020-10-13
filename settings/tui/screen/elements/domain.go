@@ -36,3 +36,15 @@ func NewDomainBox() DomainBox {
 
 	return d
 }
+
+func (d DomainBox) HasFocus() bool {
+	return d.Field.HasFocus()
+}
+
+func (d DomainBox) SetText(s string) {
+	d.Field.SetText(s)
+}
+
+func (d DomainBox) GetFocus() *tview.InputField {
+	return d.Field
+}
