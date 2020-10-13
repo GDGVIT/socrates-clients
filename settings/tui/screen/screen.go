@@ -51,7 +51,10 @@ func (s Screen) HandleInput(event *tcell.EventKey) *tcell.EventKey {
 		} else if s.DomainField.HasFocus() {
 			domain := s.DomainField.GetText()
 			s.DomainField.SetText("")
-			s.ButtonGrid.AddButton(domain)
+			err := s.ButtonGrid.AddButton(domain)
+			if err != nil {
+				log.Fatal(err)
+			}
 		}
 
 	case tcell.KeyEsc:
@@ -63,7 +66,7 @@ func (s Screen) HandleInput(event *tcell.EventKey) *tcell.EventKey {
 	case tcell.KeyDown:
 		s.scrollDown()
 	}
-	return nil
+	return event
 }
 
 func (s Screen) scrollUp() {
