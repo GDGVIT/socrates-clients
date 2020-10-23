@@ -8,9 +8,9 @@ import (
 )
 
 type Screen struct {
-	ButtonGrid 	elements.ButtonsBox
-	DomainField elements.DomainBox
-	FreqField 	elements.FreqBox
+	ButtonGrid 	*elements.ButtonsBox
+	DomainField *elements.DomainBox
+	FreqField 	*elements.FreqBox
 
 	appGrid 	*tview.Grid
 	inFocus		uint
@@ -18,7 +18,7 @@ type Screen struct {
 	app			*tview.Application
 }
 
-func New(app *tview.Application) Screen {
+func New(app *tview.Application) *Screen {
 	bb := elements.NewButtonsBox()
 	db := elements.NewDomainBox()
 	fb := elements.NewFreqBox()
@@ -27,13 +27,14 @@ func New(app *tview.Application) Screen {
 
 	appGrid := tview.NewGrid().
 		SetColumns(-1).
-		SetRows(1, 1, 1, -1).
+		SetRows(1, 1, 1, 1, 1, 1, -1).
 		AddItem(fb.Field, 0, 0, 1, 1, 0, 0, true).
 		AddItem(db.Field, 1, 0, 1, 1, 0, 0, true).
-		AddItem(bb.Grid, 2, 0, 1, 1, 0, 0, true).
-		AddItem(paddingBx, 3, 0, 1, 1, 0, 0, false)
+		AddItem(paddingBx, 2, 0, 3, 1, 0, 0, false).
+		AddItem(bb.Grid, 5, 0, 1, 1, 0, 0, true).
+		AddItem(paddingBx, 6, 0, -1, -1, 0, 0, false)
 
-	return Screen{
+	return &Screen{
 		bb,
 		db,
 		fb,
@@ -43,13 +44,13 @@ func New(app *tview.Application) Screen {
 	}
 }
 
-func (s Screen) HandleInput(event *tcell.EventKey) *tcell.EventKey {
+func (s *Screen) HandleInput(event *tcell.EventKey) *tcell.EventKey {
 	switch event.Key() {
 	case tcell.KeyEnter:
 		if s.FreqField.HasFocus() {
 			// freq := freqField.GetText()
 		} else if s.DomainField.HasFocus() {
-			domain := s.DomainField.GetText()
+		domain := s.DomainField.GetText()
 			s.DomainField.SetText("")
 			err := s.ButtonGrid.AddButton(domain)
 			if err != nil {
@@ -69,7 +70,7 @@ func (s Screen) HandleInput(event *tcell.EventKey) *tcell.EventKey {
 	return event
 }
 
-func (s Screen) scrollUp() {
+func (s *Screen) scrollUp() {
 	if s.inFocus == 0 {
 		s.inFocus = 2
 	} else {
@@ -78,12 +79,12 @@ func (s Screen) scrollUp() {
 	s.refreshFocus()
 }
 
-func (s Screen) scrollDown() {
+func (s *Screen) scrollDown() {
 	s.inFocus = (s.inFocus + 1) % 3
 	s.refreshFocus()
 }
 
-func (s Screen) refreshFocus() {
+func (s *Screen) refreshFocus() {
 	if s.inFocus == 0 {
 		s.app.SetFocus(s.FreqField.GetFocus())
 	} else if s.inFocus == 1 {
@@ -93,7 +94,7 @@ func (s Screen) refreshFocus() {
 	}
 }
 
-func (s Screen) Start() {
+func (s *Screen) Start() {
 	s.app.SetRoot(s.appGrid, true).SetFocus(s.FreqField.GetFocus())
 
 	if err := s.app.Run(); err != nil {

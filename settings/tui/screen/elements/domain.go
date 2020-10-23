@@ -16,11 +16,11 @@ type DomainBox struct {
 	Field *tview.InputField
 }
 
-func (d DomainBox) GetText() string {
+func (d *DomainBox) GetText() string {
 	return d.Field.GetText()
 }
 
-func NewDomainBox() DomainBox {
+func NewDomainBox() *DomainBox {
 	d := DomainBox {
 		tview.NewInputField(),
 	}
@@ -34,17 +34,17 @@ func NewDomainBox() DomainBox {
 			return
 		})
 
-	return d
+	return &d
 }
 
-func (d DomainBox) HasFocus() bool {
+func (d *DomainBox) HasFocus() bool {
 	return d.Field.HasFocus()
 }
 
-func (d DomainBox) SetText(s string) {
+func (d *DomainBox) SetText(s string) {
 	d.Field.SetText(s)
 }
 
-func (d DomainBox) GetFocus() *tview.InputField {
+func (d *DomainBox) GetFocus() *tview.InputField {
 	return d.Field
 }

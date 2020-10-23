@@ -1,7 +1,6 @@
 package elements
 
 import (
-	// "log"
 	// "github.com/gdamore/tcell"
 	"errors"
 	"github.com/rivo/tview"
@@ -12,12 +11,14 @@ const totalCols = 8
 type ButtonsBox struct {
 	Grid *tview.Grid
 	buttons []*tview.Button
+	totalButtons int
 }
 
-func NewButtonsBox() ButtonsBox {
+func NewButtonsBox() *ButtonsBox {
 	b := ButtonsBox {
 		tview.NewGrid(),
-		make([]*tview.Button, totalCols),
+		make([]*tview.Button, 0, totalCols),
+		0,
 	}
 
 	l := make([]int, totalCols)
@@ -29,24 +30,25 @@ func NewButtonsBox() ButtonsBox {
 		SetColumns(l...).
 		SetRows(4)
 
-	return b
+	return &b
 }
 
-func (b ButtonsBox) AddButton(text string) error {
-	if len(b.buttons) == totalCols {
+func (b *ButtonsBox) AddButton(text string) error {
+	if b.totalButtons == totalCols {
 		return errors.New("Maximum domains of interest reached")
 	}
 
 	btn := tview.NewButton(text)
 	b.buttons = append(b.buttons, btn)
-	idx := len(b.buttons)
+	idx := b.totalButtons
 	b.Grid.AddItem(btn, 0, idx, 1, 1, 0, 0, true)
+	b.totalButtons ++
 
 	return nil
 }
 
-func (b ButtonsBox) RemoveButton(btn *tview.Button) error {
-	if len(b.buttons) == 0 {
+func (b *ButtonsBox) RemoveButton(btn *tview.Button) error {
+	if b.totalButtons == 0 {
 		return errors.New("No domains left to remove")
 	}
 
@@ -57,10 +59,11 @@ func (b ButtonsBox) RemoveButton(btn *tview.Button) error {
 
 	b.buttons = append(b.buttons[:idx], b.buttons[idx+1:]...)
 	b.Grid.RemoveItem(btn)
+	b.totalButtons --
 	return nil
 }
 
-func (b ButtonsBox) findButton(btn *tview.Button) int {
+func (b *ButtonsBox) findButton(btn *tview.Button) int {
 	for i := range b.buttons {
 		if b.buttons[i] == btn {
 			return i

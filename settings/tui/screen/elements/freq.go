@@ -16,11 +16,11 @@ type FreqBox struct {
 	Field *tview.InputField
 }
 
-func (f FreqBox) GetText() string {
+func (f *FreqBox) GetText() string {
 	return f.Field.GetText()
 }
 
-func NewFreqBox() FreqBox {
+func NewFreqBox() *FreqBox {
 	f := FreqBox {
 		tview.NewInputField(),
 	}
@@ -34,13 +34,13 @@ func NewFreqBox() FreqBox {
 			return
 		})
 
-	return f
+	return &f
 }
 
-func (f FreqBox) HasFocus() bool {
+func (f *FreqBox) HasFocus() bool {
 	return f.Field.HasFocus()
 }
 
-func (f FreqBox) GetFocus() *tview.InputField {
+func (f *FreqBox) GetFocus() *tview.InputField {
 	return f.Field
 }
