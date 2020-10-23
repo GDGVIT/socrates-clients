@@ -49,19 +49,20 @@ func (b *ButtonsBox) AddButton(text string) error {
 	return nil
 }
 
-func (b *ButtonsBox) RemoveButton(btn *tview.Button) error {
+func (b *ButtonsBox) RemoveButton() error {
 	if b.totalButtons == 0 {
 		return errors.New("No domains left to remove")
 	}
 
-	idx := b.findButton(btn)
-	if idx == -1 {
-		return errors.New("Error: Attempt to remove domain not in list")
-	}
+	idx := b.currentFocus
+	btn := b.buttons[idx]
 
 	b.buttons = append(b.buttons[:idx], b.buttons[idx+1:]...)
 	b.Grid.RemoveItem(btn)
 	b.totalButtons --
+	if b.currentFocus != 0 {
+		b.currentFocus --
+	}
 	return nil
 }
 
@@ -97,12 +98,16 @@ func (b *ButtonsBox) GetFocus() tview.Primitive {
 	return b.buttons[b.currentFocus]
 }
 
-func (b *ButtonsBox) findButton(btn *tview.Button) int {
-	for i := range b.buttons {
-		if b.buttons[i] == btn {
-			return i
-		}
-	}
-
-	return -1
+func (b *ButtonsBox) HasFocus() bool {
+	return b.Grid.HasFocus()
 }
+
+// func (b *ButtonsBox) findButton(btn *tview.Button) int {
+// 	for i := range b.buttons {
+// 		if b.buttons[i] == btn {
+// 			return i
+// 		}
+// 	}
+
+// 	return -1
+// }

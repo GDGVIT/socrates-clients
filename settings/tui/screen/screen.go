@@ -34,6 +34,8 @@ func New(app *tview.Application) *Screen {
 		AddItem(bb.Grid, 5, 0, 1, 1, 0, 0, true).
 		AddItem(paddingBx, 6, 0, -1, -1, 0, 0, false)
 
+	appGrid.SetBackgroundColor(tview.Styles.PrimitiveBackgroundColor)
+	
 	return &Screen{
 		bb,
 		db,
@@ -56,6 +58,9 @@ func (s *Screen) HandleInput(event *tcell.EventKey) *tcell.EventKey {
 			if err != nil {
 				log.Fatal(err)
 			}
+		} else if s.ButtonGrid.HasFocus() {
+			s.ButtonGrid.RemoveButton()
+			s.refreshFocus()
 		}
 
 	case tcell.KeyEsc:
