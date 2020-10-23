@@ -1,7 +1,7 @@
 package elements
 
 import (
-	// "github.com/gdamore/tcell"
+	"github.com/gdamore/tcell"
 	"errors"
 	"github.com/rivo/tview"
 )
@@ -41,6 +41,8 @@ func (b *ButtonsBox) AddButton(text string) error {
 	}
 
 	btn := tview.NewButton(text)
+	btn.SetBackgroundColor(tcell.ColorGreen)
+	btn.SetBackgroundColorActivated(tcell.ColorOrangeRed)
 	b.buttons = append(b.buttons, btn)
 	idx := b.totalButtons
 	b.Grid.AddItem(btn, 0, idx, 1, 1, 0, 0, true)
