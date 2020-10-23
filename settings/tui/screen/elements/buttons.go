@@ -12,12 +12,14 @@ type ButtonsBox struct {
 	Grid *tview.Grid
 	buttons []*tview.Button
 	totalButtons int
+	currentFocus int
 }
 
 func NewButtonsBox() *ButtonsBox {
 	b := ButtonsBox {
 		tview.NewGrid(),
 		make([]*tview.Button, 0, totalCols),
+		0,
 		0,
 	}
 
@@ -61,6 +63,38 @@ func (b *ButtonsBox) RemoveButton(btn *tview.Button) error {
 	b.Grid.RemoveItem(btn)
 	b.totalButtons --
 	return nil
+}
+
+func (b *ButtonsBox) ScrollLeft() {
+	if b.totalButtons < 1 {
+		return
+	}
+
+	if b.currentFocus == 0 {
+		b.currentFocus = b.totalButtons - 1
+	} else {
+		b.currentFocus --
+	}
+}
+
+func (b *ButtonsBox) ScrollRight() {
+	if b.totalButtons < 1 {
+		return
+	}
+
+	if b.currentFocus == b.totalButtons - 1 {
+		b.currentFocus = 0
+	} else {
+		b.currentFocus ++
+	}
+}
+
+func (b *ButtonsBox) GetFocus() tview.Primitive {
+	if b.totalButtons < 1 {
+		return b.Grid
+	}
+
+	return b.buttons[b.currentFocus]
 }
 
 func (b *ButtonsBox) findButton(btn *tview.Button) int {

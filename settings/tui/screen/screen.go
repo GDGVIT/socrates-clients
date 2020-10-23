@@ -66,8 +66,28 @@ func (s *Screen) HandleInput(event *tcell.EventKey) *tcell.EventKey {
 		s.scrollUp()
 	case tcell.KeyDown:
 		s.scrollDown()
+	case tcell.KeyLeft:
+		s.scrollLeft()
+	case tcell.KeyRight:
+		s.scrollRight()
 	}
 	return event
+}
+
+func (s *Screen) scrollLeft() {
+	if s.inFocus == 2 {
+		s.ButtonGrid.ScrollLeft()
+		s.refreshFocus()
+	} 
+	
+}
+
+func (s *Screen) scrollRight() {
+	if s.inFocus == 2 {
+		s.ButtonGrid.ScrollRight()
+		s.refreshFocus()
+	}
+	
 }
 
 func (s *Screen) scrollUp() {
@@ -90,7 +110,7 @@ func (s *Screen) refreshFocus() {
 	} else if s.inFocus == 1 {
 		s.app.SetFocus(s.DomainField.GetFocus())
 	} else {
-		s.app.SetFocus(s.ButtonGrid.Grid)
+		s.app.SetFocus(s.ButtonGrid.GetFocus())
 	}
 }
 
