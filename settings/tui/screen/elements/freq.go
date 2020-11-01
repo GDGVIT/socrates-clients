@@ -1,15 +1,8 @@
 package elements
 
 import (
-	// "log"
-	// "strings"
-
 	"github.com/gdamore/tcell"
 	"github.com/rivo/tview"
-)
-
-const (
-	FreqFieldText = "Number of papers per day (max 5):"
 )
 
 type FreqBox struct {

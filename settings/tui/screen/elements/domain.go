@@ -1,15 +1,10 @@
 package elements
 
 import (
-	// "log"
 	"strings"
 
 	"github.com/gdamore/tcell"
 	"github.com/rivo/tview"
-)
-
-const (
-	DomainFieldText = "Add a domain:"
 )
 
 type DomainBox struct {
@@ -25,6 +20,7 @@ func NewDomainBox() *DomainBox {
 		tview.NewInputField(),
 	}
 
+	// Pad empty string to ensure proper alignment with frequency field
 	padding := strings.Repeat(" ", len(FreqFieldText) - len(DomainFieldText))
 
 	d.Field = d.Field.
