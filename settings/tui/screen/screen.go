@@ -3,7 +3,6 @@ package screen
 import (
 	"settings/tui/screen/elements"
 	"github.com/rivo/tview"
-	"github.com/gdamore/tcell"
 	"log"
 )
 
@@ -54,79 +53,6 @@ func New(app *tview.Application) *Screen {
 		appGrid,
 		0,
 		app,
-	}
-}
-
-func (s *Screen) HandleInput(event *tcell.EventKey) *tcell.EventKey {
-	switch event.Key() {
-	case tcell.KeyEnter:
-		if s.FreqField.HasFocus() {
-			// freq := freqField.GetText()
-		} else if s.DomainField.HasFocus() {
-		domain := s.DomainField.GetText()
-			s.DomainField.SetText("")
-			err := s.ButtonGrid.AddButton(domain)
-			if err != nil {
-				log.Fatal(err)
-			}
-		} else if s.ButtonGrid.HasFocus() {
-			s.ButtonGrid.RemoveButton()
-			s.refreshFocus()
-		}
-
-	case tcell.KeyEsc:
-		s.app.Stop()
-		return nil
-	
-	case tcell.KeyUp:
-		s.scrollUp()
-	case tcell.KeyDown:
-		s.scrollDown()
-	case tcell.KeyLeft:
-		s.scrollLeft()
-	case tcell.KeyRight:
-		s.scrollRight()
-	}
-	return event
-}
-
-func (s *Screen) scrollLeft() {
-	if s.inFocus == 2 {
-		s.ButtonGrid.ScrollLeft()
-		s.refreshFocus()
-	} 
-	
-}
-
-func (s *Screen) scrollRight() {
-	if s.inFocus == 2 {
-		s.ButtonGrid.ScrollRight()
-		s.refreshFocus()
-	}
-	
-}
-
-func (s *Screen) scrollUp() {
-	if s.inFocus == 0 {
-		s.inFocus = 2
-	} else {
-		s.inFocus = (s.inFocus - 1) % 3
-	}
-	s.refreshFocus()
-}
-
-func (s *Screen) scrollDown() {
-	s.inFocus = (s.inFocus + 1) % 3
-	s.refreshFocus()
-}
-
-func (s *Screen) refreshFocus() {
-	if s.inFocus == 0 {
-		s.app.SetFocus(s.FreqField.GetFocus())
-	} else if s.inFocus == 1 {
-		s.app.SetFocus(s.DomainField.GetFocus())
-	} else {
-		s.app.SetFocus(s.ButtonGrid.GetFocus())
 	}
 }
 
