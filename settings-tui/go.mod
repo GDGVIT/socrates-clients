@@ -1,4 +1,4 @@
-module settings
+module settings-tui
 
 go 1.15
 
