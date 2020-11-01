@@ -6,8 +6,6 @@ import (
 	"github.com/rivo/tview"
 )
 
-const totalCols = 8
-
 type ButtonsBox struct {
 	Grid *tview.Grid
 	buttons []*tview.Button
@@ -18,12 +16,12 @@ type ButtonsBox struct {
 func NewButtonsBox() *ButtonsBox {
 	b := ButtonsBox {
 		tview.NewGrid(),
-		make([]*tview.Button, 0, totalCols),
+		make([]*tview.Button, 0, BtnBoxTotalCols),
 		0,
 		0,
 	}
 
-	l := make([]int, totalCols)
+	l := make([]int, BtnBoxTotalCols)
 	for i := range l {
 		l[i] = -1
 	}
@@ -36,7 +34,7 @@ func NewButtonsBox() *ButtonsBox {
 }
 
 func (b *ButtonsBox) AddButton(text string) error {
-	if b.totalButtons == totalCols {
+	if b.totalButtons == BtnBoxTotalCols {
 		return errors.New("Maximum domains of interest reached")
 	}
 
@@ -59,6 +57,7 @@ func (b *ButtonsBox) RemoveButton() error {
 	idx := b.currentFocus
 	btn := b.buttons[idx]
 
+	// Remove button at idx: buttons = buttons[0..idx-1, idx+1..]
 	b.buttons = append(b.buttons[:idx], b.buttons[idx+1:]...)
 	b.Grid.RemoveItem(btn)
 	b.totalButtons --
@@ -103,13 +102,3 @@ func (b *ButtonsBox) GetFocus() tview.Primitive {
 func (b *ButtonsBox) HasFocus() bool {
 	return b.Grid.HasFocus()
 }
-
-// func (b *ButtonsBox) findButton(btn *tview.Button) int {
-// 	for i := range b.buttons {
-// 		if b.buttons[i] == btn {
-// 			return i
-// 		}
-// 	}
-
-// 	return -1
-// }
