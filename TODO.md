@@ -1,3 +1,0 @@
-- Add locally hosted API daemon for settings
-- Add Google scholar query logic according to settings
-- Add notification integration
