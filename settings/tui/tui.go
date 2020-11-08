@@ -4,7 +4,7 @@ import (
 	"log"
 	"os"
 	"github.com/rivo/tview"
-	"settings-tui/tui/screen"
+	"tui/screen"
 )
 
 func main() {
