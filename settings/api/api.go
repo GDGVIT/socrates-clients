@@ -3,24 +3,31 @@ package main
 import (
 	"net/http"
 	"github.com/julienschmidt/httprouter"
+	"github.com/spf13/viper"
 	"api/controller"
 	"api/model"
 	"api/routes"
 	"log"
 	"os"
-	"github.com/joho/godotenv"
 	"path"
 )
 
-func main() {
-	// Import env
-	env, err := godotenv.Read(path.Join("..", "settings.env"))
-	if err != nil {
+func initConfig() {
+	viper.SetConfigName("config")
+	viper.SetConfigType("yaml")
+	viper.AddConfigPath("..")
+
+	if err := viper.ReadInConfig(); err != nil {
 		log.Fatalln(err)
 	}
+}
+
+func main() {
+	// Setup Config
+	initConfig()
 
 	// Setup logging
-	logsPath := path.Join(env["API_LOG_DIR"], "socrates-api-logs.txt")
+	logsPath := path.Join(viper.GetString("API_LOG_DIR"), "socrates-api-logs.txt")
 	file, err := os.OpenFile(logsPath, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
     if err != nil {
         log.Fatal(err)
@@ -29,9 +36,9 @@ func main() {
 
 	// Start app
 	router := httprouter.New()
-	model := model.New(env["API_MODEL_DIR"])
+	model := model.New(viper.GetString("API_MODEL_DIR"))
 	ctrl := controller.New(model)
 	routes.Register(router, ctrl)
 
-	log.Fatal(http.ListenAndServe(":" + env["API_PORT"], router))
+	log.Fatal(http.ListenAndServe(":" + viper.GetString("API_PORT"), router))
 }
