@@ -5,7 +5,8 @@ import (
 	"github.com/julienschmidt/httprouter"
 )
 
-func Register(rtr *httprouter.Router, ctrl *controller.Controller) {
+// MakeRoutes registers routes on the router
+func MakeRoutes(rtr *httprouter.Router, ctrl *controller.Controller) {
 	rtr.GET("/view", ctrl.Viewer.View)
 	rtr.PUT("/update", ctrl.Updater.Update)
 }

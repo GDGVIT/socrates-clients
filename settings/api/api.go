@@ -38,7 +38,7 @@ func main() {
 	router := httprouter.New()
 	model := model.New(viper.GetString("API_MODEL_DIR"))
 	ctrl := controller.New(model)
-	routes.Register(router, ctrl)
+	routes.MakeRoutes(router, ctrl)
 
 	log.Fatal(http.ListenAndServe(":" + viper.GetString("API_PORT"), router))
 }
