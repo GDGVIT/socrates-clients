@@ -2,7 +2,7 @@ package update
 
 import (
 	"fmt"
-	"log"
+	log "github.com/sirupsen/logrus"
 	"encoding/json"
 	"github.com/julienschmidt/httprouter"
 	"net/http"

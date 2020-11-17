@@ -1,7 +1,7 @@
 package view
 
 import (
-	"log"
+	log "github.com/sirupsen/logrus"
 	"encoding/json"
 	"api/model"
 	"fmt"
