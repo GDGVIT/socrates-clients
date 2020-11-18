@@ -1,7 +1,7 @@
 package screen
 
 import (
-	"settings/tui/screen/elements"
+	"tui/screen/elements"
 	"github.com/rivo/tview"
 	"log"
 )

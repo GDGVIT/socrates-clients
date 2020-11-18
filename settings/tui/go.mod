@@ -1,4 +1,4 @@
-module settings
+module tui
 
 go 1.15
 
