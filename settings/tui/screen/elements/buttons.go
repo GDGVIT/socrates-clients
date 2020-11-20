@@ -1,6 +1,8 @@
 package elements
 
 import (
+	"log"
+	"github.com/GDGVIT/socrates/schema"
 	"github.com/gdamore/tcell"
 	"errors"
 	"github.com/rivo/tview"
@@ -11,16 +13,18 @@ type ButtonsBox struct {
 	buttons []*tview.Button
 	totalButtons int
 	currentFocus int
+	config		*schema.Config
 }
 
-func NewButtonsBox() *ButtonsBox {
+func NewButtonsBox(c *schema.Config) *ButtonsBox {
 	b := ButtonsBox {
 		tview.NewGrid(),
 		make([]*tview.Button, 0, BtnBoxTotalCols),
 		0,
 		0,
+		c,
 	}
-
+	
 	l := make([]int, BtnBoxTotalCols)
 	for i := range l {
 		l[i] = -1
@@ -30,16 +34,21 @@ func NewButtonsBox() *ButtonsBox {
 		SetColumns(l...).
 		SetRows(4)
 
+	// Initialize buttonbox with topic buttons acc to topics from API
+	for _, topic := range c.Topics {
+		b.RenderButton(topic)
+	}
+
 	return &b
 }
 
-func (b *ButtonsBox) AddButton(text string) error {
+// RenderButton renders a button in UI but does not update the global schema.Config instance
+func (b *ButtonsBox) RenderButton(text string) error {
 	if b.totalButtons == BtnBoxTotalCols {
 		return errors.New("Maximum domains of interest reached")
 	}
 
 	btn := tview.NewButton(text)
-	btn.SetBackgroundColor(tcell.ColorGreen)
 	btn.SetBackgroundColorActivated(tcell.ColorOrangeRed)
 	b.buttons = append(b.buttons, btn)
 	idx := b.totalButtons
@@ -49,6 +58,17 @@ func (b *ButtonsBox) AddButton(text string) error {
 	return nil
 }
 
+// AddButton adds button to UI and updates the global schema.Config instance
+func (b *ButtonsBox) AddButton(topic string) {
+	err := b.RenderButton(topic)
+	if err != nil {
+		log.Println(err)
+	}
+
+	b.config.Topics = append(b.config.Topics, topic)
+}
+
+// RemoveButton removes button in focus from UI and updates global schema.Config instance
 func (b *ButtonsBox) RemoveButton() error {
 	if b.totalButtons == 0 {
 		return errors.New("No domains left to remove")
@@ -59,6 +79,9 @@ func (b *ButtonsBox) RemoveButton() error {
 
 	// Remove button at idx: buttons = buttons[0..idx-1, idx+1..]
 	b.buttons = append(b.buttons[:idx], b.buttons[idx+1:]...)
+	// Remove topic from config at idx, same logic
+	b.config.Topics = append(b.config.Topics[:idx], b.config.Topics[idx+1:]...)
+
 	b.Grid.RemoveItem(btn)
 	b.totalButtons --
 	if b.currentFocus != 0 {
