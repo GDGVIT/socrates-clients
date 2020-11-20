@@ -3,24 +3,31 @@ package screen
 import (
 	"github.com/gdamore/tcell"
 	"log"
+	"strconv"
 )
 
 func (s *Screen) HandleInput(event *tcell.EventKey) *tcell.EventKey {
 	switch event.Key() {
 	case tcell.KeyEnter:
 		if s.FreqField.HasFocus() {
-			// freq := freqField.GetText()
-		} else if s.DomainField.HasFocus() {
-		domain := s.DomainField.GetText()
-			s.DomainField.SetText("")
-			err := s.ButtonGrid.AddButton(domain)
+			freqText := s.FreqField.GetText()
+			freq, err := strconv.Atoi(freqText)
 			if err != nil {
 				log.Fatal(err)
 			}
+			s.config.Freq = freq
+
+		} else if s.DomainField.HasFocus() {
+			domain := s.DomainField.GetText()
+			s.DomainField.SetText("")
+			s.ButtonGrid.AddButton(domain)
+			
 		} else if s.ButtonGrid.HasFocus() {
 			s.ButtonGrid.RemoveButton()
 			s.refreshFocus()
 		}
+		// Make PUT request to API
+		s.putUpdate()
 
 	case tcell.KeyEsc:
 		s.app.Stop()
