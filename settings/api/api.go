@@ -9,6 +9,7 @@ import (
 	"api/routes"
 	log "github.com/sirupsen/logrus"
 	"os"
+	"fmt"
 	"path"
 )
 
@@ -45,7 +46,7 @@ func main() {
 	ctrl := controller.New(model)
 	routes.MakeRoutes(router, ctrl)
 
-	log.Printf("Socrates API serving on PORT %s", viper.GetString("API_PORT"))
+	fmt.Printf("Socrates API serving on PORT %s", viper.GetString("API_PORT"))
 
 	log.Fatal(http.ListenAndServe(":" + viper.GetString("API_PORT"), router))
 }
