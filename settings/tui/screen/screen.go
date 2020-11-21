@@ -1,6 +1,7 @@
 package screen
 
 import (
+	"github.com/GDGVIT/socrates/schema"
 	"tui/screen/elements"
 	"github.com/rivo/tview"
 	"log"
@@ -14,13 +15,16 @@ type Screen struct {
 	appGrid 	*tview.Grid
 	inFocus		uint
 
+	config		*schema.Config
+	port		string
+
 	app			*tview.Application
 }
 
-func New(app *tview.Application) *Screen {
-	btnBox := elements.NewButtonsBox()
+func New(app *tview.Application, config *schema.Config, port string) *Screen {
 	dmnBox := elements.NewDomainBox()
-	freqBox := elements.NewFreqBox()
+	btnBox := elements.NewButtonsBox(config)
+	freqBox := elements.NewFreqBox(config)
 
 	// totalRows in the UI screen (excluding final padding row)
 	const totalRows = 7				
@@ -52,6 +56,8 @@ func New(app *tview.Application) *Screen {
 		freqBox,
 		appGrid,
 		0,
+		config,
+		port,
 		app,
 	}
 }

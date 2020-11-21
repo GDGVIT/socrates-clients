@@ -1,6 +1,8 @@
 package elements
 
 import (
+	"fmt"
+	"github.com/GDGVIT/socrates/schema"
 	"github.com/gdamore/tcell"
 	"github.com/rivo/tview"
 )
@@ -13,7 +15,7 @@ func (f *FreqBox) GetText() string {
 	return f.Field.GetText()
 }
 
-func NewFreqBox() *FreqBox {
+func NewFreqBox(c *schema.Config) *FreqBox {
 	f := FreqBox {
 		tview.NewInputField(),
 	}
@@ -26,6 +28,12 @@ func NewFreqBox() *FreqBox {
 		SetDoneFunc(func(key tcell.Key) {
 			return
 		})
+
+	if c.Freq != 0 {
+		f.Field.SetText(
+			fmt.Sprint(c.Freq),
+		)
+	}
 
 	return &f
 }
